@@ -5,11 +5,20 @@ from django.db import models
 # - Singer 모델에는 id, content(가수설명), debut(데뷔일자)가 필수로 있어야 합니다.
 # - Song 모델에는 id, singer(해당 노래 부른 사람, ForeignKey), release(출시일), content(노래 설명)이 필수로 있어야 합니다
 
+class Tag(models.Model):
+  id = models.AutoField(primary_key=True)
+  name = models.CharField(max_length=50)
+
+def image_upload_path(instance, filename):
+  return f'{instance.pk}/{filename}'
+
 class Singer(models.Model):
   id = models.AutoField(primary_key=True)
   name = models.CharField(max_length=50)
   content = models.TextField()
   debut = models.DateTimeField()
+  tags = models.ManyToManyField(Tag, blank=True)
+  image = models.ImageField(upload_to=image_upload_path, blank=True, null=True)
 
 class Song(models.Model):
   id = models.AutoField(primary_key=True)
