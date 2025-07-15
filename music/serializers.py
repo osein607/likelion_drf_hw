@@ -1,9 +1,16 @@
 from rest_framework import serializers
 from .models import *
 
+class SingerImageSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = SingerImage
+    fields = ['id', 'image']
+
 class SingerSerializer(serializers.ModelSerializer):
   id = serializers.CharField(read_only=True)
   songs = serializers.SerializerMethodField(read_only=True)
+  images = SingerImageSerializer(many=True, read_only=True)
+  # use_url=True, required=False
 
   def get_songs(self, instance):
     serializer = SongSerializer(instance.songs, many=True)
@@ -18,9 +25,7 @@ class SingerSerializer(serializers.ModelSerializer):
   class Meta:
     model = Singer
     fields = '__all__'
-  
-  image = serializers.ImageField(use_url=True, required=False)
-  
+    
 class SongSerializer(serializers.ModelSerializer):
   class Meta:
     model = Song

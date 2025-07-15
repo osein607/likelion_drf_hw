@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .models import Singer, Song, Tag
+from .models import *
 from .serializers import SingerSerializer, SongSerializer
 
 from django.shortcuts import get_object_or_404
@@ -20,6 +20,8 @@ def singer_list_create(request):
     serializer = SingerSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
       singer = serializer.save()
+
+      # 태그  
       content = request.data['content']
       tags = [words[1:] for words in content.split(' ') if words.startswith('#')]
       for t in tags:
@@ -29,6 +31,12 @@ def singer_list_create(request):
           tag = Tag(name=t)
           tag.save()
         singer.tags.add(tag)
+
+      # 다중 이미지
+      files = request.FILES.getlist('images')
+      for f in files:
+        SingerImage.objects.create(singer=singer, image=f)
+      
       singer.save()
       return Response(data=serializer.data)
 

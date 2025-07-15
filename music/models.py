@@ -18,6 +18,10 @@ class Singer(models.Model):
   content = models.TextField()
   debut = models.DateTimeField()
   tags = models.ManyToManyField(Tag, blank=True)
+  # image = models.ImageField(upload_to=image_upload_path, blank=True, null=True)
+
+class SingerImage(models.Model):
+  singer = models.ForeignKey(Singer, related_name='images', on_delete=models.CASCADE)
   image = models.ImageField(upload_to=image_upload_path, blank=True, null=True)
 
 class Song(models.Model):
