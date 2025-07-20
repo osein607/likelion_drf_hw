@@ -96,3 +96,6 @@ def find_tag(request, tags_name):
     singer=Singer.objects.filter(tags__in=[tags])
     serializer = SingerSerializer(singer, many=True)
     return Response(data=serializer.data)
+
+def test():
+  pass
